@@ -5,18 +5,17 @@ Dec2Hex::Dec2Hex()
 {
 }
 
-int Dec2Hex::input()
+QString Dec2Hex::input() const
 {
     return m_input;
 }
 
-void Dec2Hex::setInput(const int &str)
+void Dec2Hex::setInput(const QString &str)
 {
     m_input = str;
-    convert();
 }
 
-QString Dec2Hex::output()
+QString Dec2Hex::output() const
 {
     return m_output;
 }
@@ -24,6 +23,26 @@ QString Dec2Hex::output()
 void Dec2Hex::setOutput(const QString &str)
 {
     m_output = str;
+}
+
+QStringList Dec2Hex::history() const
+{
+    return m_history;
+}
+
+void Dec2Hex::convertNew()
+{
+    convert();
+    addHist();
+    qDebug() << history();
+}
+
+void Dec2Hex::convertHistory(const int &ind)
+{
+    if (ind < m_history.size()) {
+        setInput(m_history[ind]);
+        convert();
+    }
 }
 
 QString Dec2Hex::formatHex(const QString &str) const
@@ -54,7 +73,20 @@ QString Dec2Hex::formatHex(const QString &str) const
 
 void Dec2Hex::convert()
 {
-    m_output = formatHex(QString::number(m_input, 16).toUpper());
+    QStringList list2 = m_input.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    m_output = QString::number(list2[0].toInt(), 16).toUpper();
+    for (int i=1; i<list2.size(); ++i) {
+        m_output += ',';
+        m_output += QString::number(list2[i].toLongLong(), 16).toUpper();
+    }
+}
+
+void Dec2Hex::addHist()
+{
+    m_history.insert(0, m_input);
+    if (m_history.size() >= maxHis) {
+        m_history.pop_back();
+    }
 }
 
 

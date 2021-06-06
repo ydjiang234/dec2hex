@@ -9,19 +9,55 @@ Window {
     visible: true
     title: qsTr("Dec2Hex")
 
-    ColumnLayout {
+    RowLayout {
+
         anchors.fill: parent
-        TextInput {
-            Layout.alignment: Qt.AlignCenter
-            id: tbInput
-            text: backend.input;
+
+        ListView {
+            id: listView
+            implicitWidth: 200
+            implicitHeight: 500
+            model: backend.history
+            delegate: Rectangle {
+                width: listView.width
+                border.width: 2
+                border.color: red
+                Text {
+                text: modelData
+                }
+            }
         }
 
-        Text {
-            Layout.alignment: Qt.AlignCenter
-            id: tbOutput
-            text: backend.output;
-        }
+        ColumnLayout {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            TextInput {
+                Layout.alignment: Qt.AlignCenter
+                id: tbInput
+                text: backend.input
+                onTextChanged: backend.input = text;
+            }
 
+            Button {
+                Layout.alignment: Qt.AlignCenter
+                id:btConvert
+                text: qsTr("Convert")
+                onClicked: {
+                    backend.convertNew()
+                    tbOutput.text = backend.output
+                }
+            }
+
+            TextEdit {
+                Layout.alignment: Qt.AlignCenter
+                id: tbOutput
+                text: backend.output
+                readOnly: true
+                wrapMode: Text.WordWrap
+                selectByMouse: true
+                selectByKeyboard: true
+            }
+
+        }
     }
 }

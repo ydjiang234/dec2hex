@@ -2,7 +2,7 @@
 #define DEC2HEX_H
 
 #include <QObject>
-#include <QMetaType>
+#include <QStringListModel>
 #include <QDebug>
 
 class Dec2Hex : public QObject
@@ -10,7 +10,7 @@ class Dec2Hex : public QObject
     Q_OBJECT
     Q_PROPERTY(QString input READ input WRITE setInput)
     Q_PROPERTY(QString output READ output WRITE setOutput)
-    Q_PROPERTY(QStringList history READ history)
+    Q_PROPERTY(QStringListModel* model READ model)
 public:
     Dec2Hex();
 
@@ -19,7 +19,7 @@ public:
     QString output() const;
     void setOutput(const QString &str);
 
-    QStringList history() const;
+    QStringListModel* model() const;
 
     Q_INVOKABLE void convertNew();
     Q_INVOKABLE void convertHistory(const int &ind);
@@ -31,7 +31,7 @@ protected:
 
     QString m_input = "0";
     QString m_output = "0";
-    QStringList m_history;
+    QStringListModel *m_model;
     const int maxHis = 20;
 };
 

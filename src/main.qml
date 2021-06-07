@@ -17,13 +17,14 @@ Window {
             id: listView
             implicitWidth: 200
             implicitHeight: 500
-            model: backend.history
-            delegate: Rectangle {
-                width: listView.width
-                border.width: 2
-                border.color: red
-                Text {
-                text: modelData
+            model: backend.model
+            delegate: Button {
+                text: listView.currentIndex
+                highlighted: index==listView.currentIndex
+                onClicked: {
+                    listView.currentIndex = index;
+                    console.log(index)
+                    backend.convertHistory(index);
                 }
             }
         }

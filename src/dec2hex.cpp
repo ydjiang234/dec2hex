@@ -3,6 +3,8 @@
 Dec2Hex::Dec2Hex()
     : QObject()
 {
+    m_model = new QStringListModel(this);
+    m_model->setStringList(QStringList());
 }
 
 QString Dec2Hex::input() const
@@ -25,22 +27,21 @@ void Dec2Hex::setOutput(const QString &str)
     m_output = str;
 }
 
-QStringList Dec2Hex::history() const
+QStringListModel* Dec2Hex::model() const
 {
-    return m_history;
+    return m_model;
 }
 
 void Dec2Hex::convertNew()
 {
     convert();
     addHist();
-    qDebug() << history();
 }
 
 void Dec2Hex::convertHistory(const int &ind)
 {
-    if (ind < m_history.size()) {
-        setInput(m_history[ind]);
+    if (ind < m_model->rowCount()) {
+        setInput(m_model->stringList()[ind]);
         convert();
     }
 }
@@ -83,9 +84,10 @@ void Dec2Hex::convert()
 
 void Dec2Hex::addHist()
 {
-    m_history.insert(0, m_input);
-    if (m_history.size() >= maxHis) {
-        m_history.pop_back();
+    m_model->insertRow(0);
+    m_model->stringList()[0] = m_input;
+    if (m_model->rowCount() >= maxHis) {
+        m_model->removeRow(maxHis);
     }
 }
 
